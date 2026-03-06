@@ -37,7 +37,7 @@ def time_dependent_auc(
     integrate: bool = False,
 ) -> Tensor:
     """
-    Cumulative/dynamic AUC_t. If fpr_range is None: full AUC_t; else partial AUC_t over FPR ∈ [α0, α1].
+    Cumulative/dynamic AUC_t. If fpr_range is None: full AUC_t.
     Returns (T,) unless integrate=True → scalar.
     """
     N, T = event.shape[0], eval_time.shape[0]

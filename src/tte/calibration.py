@@ -35,9 +35,7 @@ def _grouped_observed_risk_at_time(
 
 
 def _sorted_bin_assignments(
-    risk: Tensor,
-    weights: Tensor,
-    n_bins: int,
+    risk: Tensor, weights: Tensor, n_bins: int
 ) -> tuple[Tensor, Tensor, Tensor, Tensor, Tensor]:
     """
     Sort by risk per time and assign each sorted rank to a weighted-frequency bin.
@@ -59,9 +57,7 @@ def _sorted_bin_assignments(
     bin_steps = torch.arange(1, n_bins + 1, device=device, dtype=dtype).unsqueeze(0)
     thresholds = (total_weight / n_bins).unsqueeze(1) * bin_steps
     bin_ends = torch.searchsorted(
-        cumulative_weight.transpose(0, 1).contiguous(),
-        thresholds,
-        right=False,
+        cumulative_weight.transpose(0, 1).contiguous(), thresholds, right=False
     )
     bin_ends = torch.cummax(bin_ends.clamp(max=n_samples), dim=1).values
     bin_ends[:, -1] = n_samples
@@ -72,19 +68,14 @@ def _sorted_bin_assignments(
         .contiguous()
     )
     bin_ids_by_time = torch.searchsorted(
-        bin_ends[:, :-1].contiguous(),
-        rank_positions,
-        right=True,
+        bin_ends[:, :-1].contiguous(), rank_positions, right=True
     )
     bin_ids_sorted = bin_ids_by_time.transpose(0, 1).contiguous()
     return order, risk_sorted, weights_sorted, total_weight, bin_ids_sorted
 
 
 def _bin_aggregates_from_sorted(
-    risk_sorted: Tensor,
-    weights_sorted: Tensor,
-    bin_ids_sorted: Tensor,
-    n_bins: int,
+    risk_sorted: Tensor, weights_sorted: Tensor, bin_ids_sorted: Tensor, n_bins: int
 ) -> tuple[Tensor, Tensor]:
     """
     Shared per-(time,bin) aggregates:
@@ -109,18 +100,14 @@ def _bin_aggregates_from_sorted(
 
 
 def _expected_from_bin_aggregates(
-    weighted_risk_sum: Tensor,
-    bin_weight_sum: Tensor,
-    eps: float,
+    weighted_risk_sum: Tensor, bin_weight_sum: Tensor, eps: float
 ) -> Tensor:
     """Per-(time,bin) weighted mean predicted risk."""
     return weighted_risk_sum / torch.clamp(bin_weight_sum, min=eps)
 
 
 def _bin_weights_from_bin_aggregates(
-    bin_weight_sum: Tensor,
-    total_weight: Tensor,
-    eps: float,
+    bin_weight_sum: Tensor, total_weight: Tensor, eps: float
 ) -> Tensor:
     """Per-(time,bin) normalized bin mass."""
     return bin_weight_sum / torch.clamp(total_weight.unsqueeze(1), min=eps)
@@ -144,9 +131,7 @@ def _observed_from_grouped_km(
     event_sorted = event[time_order]
     event_indicator_sorted = (event_sorted == 1).to(dtype=dtype)
     unique_times, time_bucket = torch.unique(
-        event_time[time_order],
-        sorted=True,
-        return_inverse=True,
+        event_time[time_order], sorted=True, return_inverse=True
     )
     eval_indices = torch.searchsorted(unique_times, eval_time, right=True) - 1
     n_unique_times = unique_times.numel()
@@ -215,14 +200,10 @@ def expected_observed_timebins(
         n_bins=n_bins,
     )
     expected = _expected_from_bin_aggregates(
-        weighted_risk_sum=weighted_risk_sum,
-        bin_weight_sum=bin_weight_sum,
-        eps=eps,
+        weighted_risk_sum=weighted_risk_sum, bin_weight_sum=bin_weight_sum, eps=eps
     )
     bin_weights = _bin_weights_from_bin_aggregates(
-        bin_weight_sum=bin_weight_sum,
-        total_weight=total_weight,
-        eps=eps,
+        bin_weight_sum=bin_weight_sum, total_weight=total_weight, eps=eps
     )
     observed = _observed_from_grouped_km(
         order=order,

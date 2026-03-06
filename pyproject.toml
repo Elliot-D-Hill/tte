@@ -3,13 +3,9 @@ name = "tte"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "Elliot Hill", email = "elliot.douglas.hill@gmail.com" }
-]
+authors = [{ name = "Elliot Hill", email = "elliot.douglas.hill@gmail.com" }]
 requires-python = ">=3.13"
-dependencies = [
-    "torch>=2.10.0",
-]
+dependencies = ["torch>=2.10.0"]
 
 [project.scripts]
 tte = "tte:main"
@@ -19,6 +15,7 @@ requires = ["uv_build>=0.9.9,<0.10.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
-dev = [
-    "pytest>=9.0.2",
-]
+dev = ["pytest>=9.0.2"]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true

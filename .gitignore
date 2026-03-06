@@ -12,3 +12,4 @@ wheels/
 
 docs/
 scripts/
+.DS_Store

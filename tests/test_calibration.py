@@ -105,10 +105,7 @@ def test_expected_observed_timebins_matches_reference():
     )
 
     assert torch.allclose(
-        observed.to(dtype=observed_ref.dtype),
-        observed_ref,
-        rtol=1e-7,
-        atol=1e-7,
+        observed.to(dtype=observed_ref.dtype), observed_ref, rtol=1e-7, atol=1e-7
     )
     assert torch.allclose(expected, expected_ref, rtol=1e-6, atol=1e-6)
     assert torch.allclose(bin_weights, bin_weights_ref, rtol=1e-6, atol=1e-6)
@@ -173,7 +170,9 @@ def test_expected_observed_timebins_eval_time_extremes():
     event = torch.tensor([1, 0, 1, 0, 1, 1, 0, 0], dtype=torch.int64)
     event_time = torch.tensor([2, 3, 5, 7, 11, 13, 17, 19], dtype=torch.float64)
     eval_time = torch.tensor([0.5, 6.0, 30.0], dtype=torch.float64)
-    weights = torch.tensor([1.2, 0.8, 1.1, 0.9, 1.0, 1.5, 1.3, 0.7], dtype=torch.float64)
+    weights = torch.tensor(
+        [1.2, 0.8, 1.1, 0.9, 1.0, 1.5, 1.3, 0.7], dtype=torch.float64
+    )
 
     expected_ref, observed_ref, bin_weights_ref = _reference_expected_observed_timebins(
         risk, event, event_time, eval_time, n_bins=4, weights=weights
@@ -183,10 +182,7 @@ def test_expected_observed_timebins_eval_time_extremes():
     )
 
     assert torch.allclose(
-        observed.to(dtype=observed_ref.dtype),
-        observed_ref,
-        rtol=1e-7,
-        atol=1e-7,
+        observed.to(dtype=observed_ref.dtype), observed_ref, rtol=1e-7, atol=1e-7
     )
     assert torch.allclose(expected, expected_ref, rtol=1e-6, atol=1e-6)
     assert torch.allclose(bin_weights, bin_weights_ref, rtol=1e-6, atol=1e-6)

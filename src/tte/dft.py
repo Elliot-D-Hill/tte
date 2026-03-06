@@ -16,10 +16,7 @@ def _reduce_loss(nll: Tensor, mask: Tensor, reduction: str) -> Tensor:
 
 
 def _validate_inputs(
-    logits: Tensor,
-    indicator: Tensor,
-    event_time: Tensor,
-    mask: Tensor | None = None,
+    logits: Tensor, indicator: Tensor, event_time: Tensor, mask: Tensor | None = None
 ) -> None:
     if logits.dim() == 3:
         if indicator.dim() != 2:
